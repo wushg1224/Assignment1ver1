@@ -6,13 +6,15 @@ namespace Assignment1
     {
         static void Main(string[] args)
         {
-            // 保障运行时有 Data 目录（用于首次写入等）
+            // create directory
             Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Data"));
 
             Console.Title = "Assignment1 – Hospital Console App";
+
+            //show medu
             LoginMenu.Show();
 
-            Console.WriteLine("\nGoodbye!");
+            Console.WriteLine("\nExit!");
         }
     }
 }
