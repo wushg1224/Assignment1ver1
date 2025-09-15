@@ -116,12 +116,13 @@ namespace Assignment1.Menus
             var d = DataRepository.GetDoctorById(p.DoctorId.Value);
             if (d == null) { Console.WriteLine("Doctor not found."); Pause(); return; }
 
-            Console.WriteLine($"ID:       {d.Id}");
-            Console.WriteLine($"Name:     {d.Name}");
-            Console.WriteLine($"Address:  {d.Address}");
-            Console.WriteLine($"Email:    {d.Email}");
-            Console.WriteLine($"Phone:    {d.Phone}");
-            Console.WriteLine($"Specialty:{d.Specialty}");
+            Console.WriteLine("your doctor:");
+            Console.WriteLine("");
+            string tableTitle = "name     |email address  | phone     |address";
+            Console.WriteLine(tableTitle);
+            Console.WriteLine("---------------------------------------------------");
+            string content = d.Name + "    |" + d.Email + "         |" + d.Phone + "        |" + d.Address;
+            Console.WriteLine(content);
 
             Pause();
         }
@@ -138,10 +139,20 @@ namespace Assignment1.Menus
                 Console.WriteLine("No appointments yet.");
                 Pause(); return;
             }
+            // 取当前病人对象
+            var me = DataRepository.GetPatientById(userId);
+
+            Console.WriteLine("Appointments for"+me.Name);
+            string title = "Doctor         |Patient              |Description";
+            Console.WriteLine(title);
+            Console.WriteLine("--------------------------");
 
             foreach (var a in appts)
             {
-                Console.WriteLine($"{a.Id} | Doctor:{a.DoctorId} | Notes: {a.Notes}");
+                var d = DataRepository.GetDoctorById(a.DoctorId);
+                var patitent = DataRepository.GetPatientById(a.PatientId);
+
+                Console.WriteLine($"{d.Name} |{patitent.Name}| Notes: {a.Notes}");
             }
             Pause();
         }
@@ -162,7 +173,15 @@ namespace Assignment1.Menus
             if (p.DoctorId.HasValue)
             {
                 doctorId = p.DoctorId.Value;
-                Console.WriteLine($"Using your assigned doctor: {doctorId}");
+                var d = DataRepository.GetDoctorById(doctorId);
+                Console.WriteLine($"Using your assigned doctor: {d.Name}");
+                var appts = DataRepository.GetAppointmentsByPatient(userId);
+
+                Console.WriteLine($"Description of the appointment: ");
+                var notes = Console.ReadLine() ?? "";
+                var newId = DataRepository.AddAppointment(doctorId, userId, notes);
+                Console.WriteLine("The appointment has been booked successfully");
+                Console.WriteLine($"\nAppointment created. ID = {newId}");
             }
             else
             {
@@ -174,18 +193,18 @@ namespace Assignment1.Menus
                     Console.WriteLine($"{d.Id} | {d.Name} | {d.Specialty}");
 
                 Console.Write("\nDoctor ID: ");
-                if (!int.TryParse(Console.ReadLine(), out doctorId))
+               if (!int.TryParse(Console.ReadLine(), out doctorId))
                 {
                     Console.WriteLine("Invalid doctor ID.");
                     Pause(); return;
                 }
             }
 
-            Console.Write("Notes: ");
-            var notes = Console.ReadLine() ?? "";
+            //Console.Write("Notes: ");
+            //var notes = Console.ReadLine() ?? "";
 
-            var newId = DataRepository.AddAppointment(doctorId, userId, notes);
-            Console.WriteLine($"\nAppointment created. ID = {newId}");
+            //var newId = DataRepository.AddAppointment(doctorId, userId, notes);
+          //  Console.WriteLine($"\nAppointment created. ID = {newId}");
 
             Pause();
         }

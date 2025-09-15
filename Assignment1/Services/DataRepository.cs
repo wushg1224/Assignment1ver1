@@ -32,6 +32,17 @@ namespace Assignment1.Services
             }
             return list;
         }
+        //list all doctor
+        public static string GetAdminsName()
+        {
+            var list = new List<Admin>();
+            foreach (var line in FileManager.ReadAllLinesSafe("admins.txt"))
+            {
+                var d = line.Split('|')[1];
+                return d;
+            }
+            return "";
+        }
         //list all appointment
         public static List<Appointment> GetAllAppointments()
         {

@@ -3,6 +3,7 @@ using System.Text;
 using System.Linq;
 using Assignment1.Services;
 using Assignment1.Core.Models;
+using System.Text.Json;
 
 namespace Assignment1.Menus
 {
@@ -17,7 +18,8 @@ namespace Assignment1.Menus
                 Console.Clear();
                 Header("Doctor Menu");
 
-                Console.WriteLine($"Welcome Doctor {userId}\n");
+                var d = DataRepository.GetDoctorById(userId);
+                Console.WriteLine($"Welcome to DOTNET hospital management system Doctor {d.Name}\n");
                 Console.WriteLine("Please choose an option:");
                 Console.WriteLine("1) List doctor details");
                 Console.WriteLine("2) List patients");
@@ -75,12 +77,19 @@ namespace Assignment1.Menus
             var d = DataRepository.GetDoctorById(userId);
             if (d == null) { Console.WriteLine("Doctor not found."); Pause(); return; }
 
-            Console.WriteLine($"ID:        {d.Id}");
-            Console.WriteLine($"Name:      {d.Name}");
-            Console.WriteLine($"Address:   {d.Address}");
-            Console.WriteLine($"Email:     {d.Email}");
-            Console.WriteLine($"Phone:     {d.Phone}");
-            Console.WriteLine($"Specialty: {d.Specialty}");
+            Console.WriteLine("");
+            string tableTitle = "name     |email address  | phone     |address";
+            Console.WriteLine(tableTitle);
+            Console.WriteLine("---------------------------------------------------");
+            string content = d.Name + "    |" + d.Email + "         |" + d.Phone + "        |" + d.Address;
+            Console.WriteLine(content);
+
+            //Console.WriteLine($"ID:        {d.Id}");
+            //Console.WriteLine($"Name:      {d.Name}");
+            //Console.WriteLine($"Address:   {d.Address}");
+            //Console.WriteLine($"Email:     {d.Email}");
+            //Console.WriteLine($"Phone:     {d.Phone}");
+            //Console.WriteLine($"Specialty: {d.Specialty}");
             Pause();
         }
 
@@ -94,9 +103,16 @@ namespace Assignment1.Menus
                                     .OrderBy(p => p.Id)
                                     .ToList();
             if (all.Count == 0) { Console.WriteLine("No patients assigned."); Pause(); return; }
+            var d = DataRepository.GetDoctorById(userId);
+            if (d == null) { Console.WriteLine("Doctor not found."); Pause(); return; }
+
+            Console.WriteLine($"Patients assigned to {d.Name}");
+            string tableTitle = "patient     |doctor  |email address    |phone";
+            Console.WriteLine(tableTitle);
+            Console.WriteLine("---------------------------------------------------");
 
             foreach (var p in all)
-                Console.WriteLine($"{p.Id} | {p.Name} | {p.Email}");
+                Console.WriteLine($" {p.Name} | {d.Name}|{p.Email}|{p.Phone}");
 
             Pause();
         }
@@ -108,9 +124,15 @@ namespace Assignment1.Menus
 
             var appts = DataRepository.GetAppointmentsByDoctor(userId);
             if (appts.Count == 0) { Console.WriteLine("No appointments."); Pause(); return; }
-
+            string tableTitle = "doctor   |patient  | Description";
+            Console.WriteLine(tableTitle);
+            Console.WriteLine("---------------------------------------------------");
             foreach (var a in appts)
-                Console.WriteLine($"{a.Id} | Patient:{a.PatientId} | Notes: {a.Notes}");
+            {
+                var d = DataRepository.GetDoctorById(userId);
+                var p = DataRepository.GetPatientById(a.PatientId);
+                Console.WriteLine($"{d.Name} | {p.Name} | {a.Notes}");
+            }
 
             Pause();
         }
@@ -129,13 +151,18 @@ namespace Assignment1.Menus
 
             var p = DataRepository.GetPatientById(pid);
             if (p == null) { Console.WriteLine("Patient not found."); Pause(); return; }
-
-            Console.WriteLine($"ID:       {p.Id}");
-            Console.WriteLine($"Name:     {p.Name}");
-            Console.WriteLine($"Address:  {p.Address}");
-            Console.WriteLine($"Email:    {p.Email}");
-            Console.WriteLine($"Phone:    {p.Phone}");
-            Console.WriteLine($"DoctorId: {(p.DoctorId.HasValue ? p.DoctorId.Value : -1)}");
+            Console.WriteLine($"Enter the id of the patient to check:{pid}");
+            string tableTitle = "Patient  |Docotr | Email Address |phone |address";
+            Console.WriteLine(tableTitle);
+            Console.WriteLine("---------------------------------------------------");
+            var d = DataRepository.GetDoctorById(Convert.ToInt32(p.DoctorId));
+            Console.WriteLine($"{p.Name} | {d.Name} | {p.Email}|{p.Phone}|{p.Address}");
+            //Console.WriteLine($"ID:       {p.Id}");
+            //Console.WriteLine($"Name:     {p.Name}");
+            //Console.WriteLine($"Address:  {p.Address}");
+            //Console.WriteLine($"Email:    {p.Email}");
+            //Console.WriteLine($"Phone:    {p.Phone}");
+            //Console.WriteLine($"DoctorId: {(p.DoctorId.HasValue ? p.DoctorId.Value : -1)}");
             Pause();
         }
 
