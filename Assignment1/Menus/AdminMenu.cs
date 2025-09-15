@@ -18,7 +18,7 @@ namespace Assignment1.Menus
                 Header("Admin Menu");
                 string ad = DataRepository.GetAdminsName();
 
-                Console.WriteLine($"Welcome Admin {ad}\n");
+                Console.WriteLine($"Welcome to DOTNET Hospital Management System {ad}\n");
                 Console.WriteLine("Please choose an option:");
                 Console.WriteLine("1) List all doctors");
                 Console.WriteLine("2) Check doctor details");
@@ -26,7 +26,7 @@ namespace Assignment1.Menus
                 Console.WriteLine("4) Check patient details");
                 Console.WriteLine("5) Add doctor");
                 Console.WriteLine("6) Add patient");
-                Console.WriteLine("L) Exit to login");
+                Console.WriteLine("L) Logout");
                 Console.WriteLine("E) Exit system");
                 Console.Write("\nSelect: ");
 
@@ -74,7 +74,7 @@ namespace Assignment1.Menus
             }
         }
 
-        // list all doctor
+        // list all doctor info
         private static void ListAllDoctors()
         {
             Console.Clear();
@@ -82,9 +82,9 @@ namespace Assignment1.Menus
 
             var docs = DataRepository.GetAllDoctors().OrderBy(d => d.Id).ToList();
             if (docs.Count == 0) { Console.WriteLine("No doctors."); Pause(); return; }
-            string tableTitle = "doctor   |Email Adress  | Phone    |Address";
+            string tableTitle = "Doctor        |Email Adress            | Phone       |Address";
             Console.WriteLine(tableTitle);
-            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine("------------------------------------------------------------------");
             foreach (var d in docs)
 
             {
@@ -93,19 +93,20 @@ namespace Assignment1.Menus
                 Console.WriteLine($"{d.Name} | {d.Email} | {d.Phone}|{d.Address}");
             }
 
-            // Console.WriteLine($"{d.Id} | {d.Name} | {d.Specialty}");
 
             Pause();
         }
 
-        // list doctor detail
+        // list select doctor detail
         private static void CheckDoctorDetails()
         {
             Console.Clear();
             Header("Doctor Details");
 
-            Console.Write("Enter doctor ID: ");
-            if (!int.TryParse(Console.ReadLine(), out var did))
+            Console.Write("Please enterr the ID of patient who's details you are checking. or press n to return to menu: ");
+            var input = Console.ReadLine()?.Trim();
+            if (string.Equals(input, "n", StringComparison.OrdinalIgnoreCase)) return;
+            if (!int.TryParse(input, out var pid))
             {
                 Console.WriteLine("Invalid ID.");
                 Pause(); return;
@@ -116,7 +117,7 @@ namespace Assignment1.Menus
 
             Console.WriteLine("your doctor:");
             Console.WriteLine("");
-            string tableTitle = "name     |email address  | phone     |address";
+            string tableTitle = "Name        |Email Adress            | Phone       |Address";
             Console.WriteLine(tableTitle);
             Console.WriteLine("---------------------------------------------------");
             string content = d.Name + "    |" + d.Email + "         |" + d.Phone + "        |" + d.Address;
@@ -161,7 +162,9 @@ namespace Assignment1.Menus
             Console.Clear();
             Header("Patient Details");
 
-            Console.Write("Enter patient ID: ");
+            Console.Write("Please enterr the ID of patient who's details you are checking. or press n to return to menu: ");
+            var input = Console.ReadLine()?.Trim();
+            if (string.Equals(input, "n", StringComparison.OrdinalIgnoreCase)) return;
             if (!int.TryParse(Console.ReadLine(), out var pid))
             {
                 Console.WriteLine("Invalid ID.");
@@ -170,13 +173,6 @@ namespace Assignment1.Menus
 
             var p = DataRepository.GetPatientById(pid);
             if (p == null) { Console.WriteLine("Patient not found."); Pause(); return; }
-
-            //Console.WriteLine($"ID:       {p.Id}");
-            //Console.WriteLine($"Name:     {p.Name}");
-            //Console.WriteLine($"Address:  {p.Address}");
-            //Console.WriteLine($"Email:    {p.Email}");
-            //Console.WriteLine($"Phone:    {p.Phone}");
-            //Console.WriteLine($"DoctorId: {(p.DoctorId.HasValue ? p.DoctorId.Value : -1)}");
 
 
             string tableTitle = "patient     |doctor  |email address    |phone  |adress";
@@ -264,7 +260,7 @@ namespace Assignment1.Menus
             Console.WriteLine("┌────────────────────────────────────────────┐");
             Console.WriteLine("│ DOTNET Hospital Management System          │");
             Console.WriteLine("│--------------------------------------------│");
-            Console.WriteLine($"│ {subtitle.PadRight(42)}│");
+            Console.WriteLine($"│ {subtitle.PadRight(42)} │");
             Console.WriteLine("└────────────────────────────────────────────┘");
             Console.WriteLine();
         }
