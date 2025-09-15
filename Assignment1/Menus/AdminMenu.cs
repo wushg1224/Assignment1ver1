@@ -18,7 +18,7 @@ namespace Assignment1.Menus
                 Header("Admin Menu");
                 string ad = DataRepository.GetAdminsName();
 
-                Console.WriteLine($"Welcome Admin {ad}\n");
+                Console.WriteLine($"Welcome to DOTNET Hospital Management System {ad}\n");
                 Console.WriteLine("Please choose an option:");
                 Console.WriteLine("1) List all doctors");
                 Console.WriteLine("2) Check doctor details");
@@ -26,7 +26,7 @@ namespace Assignment1.Menus
                 Console.WriteLine("4) Check patient details");
                 Console.WriteLine("5) Add doctor");
                 Console.WriteLine("6) Add patient");
-                Console.WriteLine("L) Exit to login");
+                Console.WriteLine("L) Logout");
                 Console.WriteLine("E) Exit system");
                 Console.Write("\nSelect: ");
 
